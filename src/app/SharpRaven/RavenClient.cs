@@ -52,7 +52,7 @@ namespace SharpRaven
         private readonly ISentryRequestFactory sentryRequestFactory;
         private readonly ISentryUserFactory sentryUserFactory;
 
-
+#if !NETSTANDARD
         /// <summary>
         /// Initializes a new instance of the <see cref="RavenClient" /> class. Sentry
         /// Data Source Name will be read from sharpRaven section in your app.config or
@@ -63,6 +63,7 @@ namespace SharpRaven
             : this(new Dsn(Configuration.Settings.Dsn.Value), jsonPacketFactory)
         {
         }
+#endif
 
 
         /// <summary>
@@ -251,7 +252,7 @@ namespace SharpRaven
         [Obsolete("Use CaptureException() instead.", true)]
         public string CaptureEvent(Exception e, Dictionary<string, string> tags)
         {
-            return CaptureException(e, tags : tags);
+            return CaptureException(e, tags: tags);
         }
 
 
@@ -330,10 +331,12 @@ namespace SharpRaven
                 ? Logger
                 : packet.Logger;
             packet.User = packet.User ?? this.sentryUserFactory.Create();
-            try {
+            try
+            {
                 packet.Request = packet.Request ?? this.sentryRequestFactory.Create();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 HandleException(ex, null);
                 packet.Request = null;
             }
@@ -391,11 +394,15 @@ namespace SharpRaven
                         SystemUtil.WriteError("Request body (scrubbed):", requester.Data.Scrubbed);
                     }
 
+#if !NETSTANDARD
                     if (requester.WebRequest != null && requester.WebRequest.Headers != null && requester.WebRequest.Headers.Count > 0)
                         SystemUtil.WriteError("Request headers:", requester.WebRequest.Headers.ToString());
+#endif
                 }
 
+#if !NETSTANDARD
                 var webException = exception as WebException;
+
                 if (webException == null || webException.Response == null)
                     return null;
 
@@ -418,6 +425,7 @@ namespace SharpRaven
 
                 SystemUtil.WriteError("Response headers:", response.Headers.ToString());
                 SystemUtil.WriteError("Response body:", messageBody);
+#endif
             }
             catch (Exception onErrorException)
             {

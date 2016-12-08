@@ -28,10 +28,14 @@
 
 #endregion
 
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly : AssemblyTitle("SharpRaven")]
-[assembly : Guid("b5683941-1254-484e-b074-87cedd4fc78e")]
 [assembly : InternalsVisibleTo("SharpRaven.UnitTests")]
+
+#if !NETSTANDARD
+[assembly : Guid("b5683941-1254-484e-b074-87cedd4fc78e")]
+#endif

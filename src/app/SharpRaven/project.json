@@ -1,0 +1,70 @@
+{
+  "version": "3.0.0-*",
+  "description": "Raven is a C# client for Sentry (getsentry.com and github.com/getsentry/sentry)",
+  "title": ".NET client for Sentry (getsentry.com)",
+  "authors": [ "Sentry Team" ],
+  "copyright": "Copyright 2014 The Sentry Team and individual contributors",
+  "packOptions": {
+    "iconUrl": "https://raw.githubusercontent.com/getsentry/raven-csharp/master/sentry-icon.png",
+    "licenseUrl": "https://github.com/getsentry/raven-csharp/blob/master/LICENSE",
+    "owners": [ "jsk", "asbjornu", "gmaclella" ],
+    "projectUrl": "https://github.com/getsentry/raven-csharp",
+    "tags": [ "raven", "sentry", "logging" ]
+  },
+  "dependencies": {
+    "NETStandard.Library": "1.6.1",
+    "Newtonsoft.Json": "9.0.1"
+  },
+  "frameworks": {
+    "netstandard16": {
+      "dependencies": {
+        "System.Collections.Concurrent": "4.3.0",
+        "System.Collections.Specialized": "4.3.0",
+        "System.Console": "4.3.0",
+        "System.Diagnostics.StackTrace": "4.3.0",
+        "System.IO.Compression": "4.3.0",
+        "System.Net.Http": "4.3.0",
+        "System.Reflection": "4.3.0",
+        "System.Security.Principal": "4.3.0"
+      },
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      }
+    },
+    "net46": {
+      "dependencies": {
+        "System.Collections.Specialized": "4.3.0",
+        "System.Console": "4.3.0",
+        "System.Diagnostics.StackTrace": "4.3.0",
+        "System.IO.Compression": "4.3.0",
+        "System.Net.Http": "4.3.0"
+      },
+      "frameworkAssemblies": {
+        "System.Configuration": "4.0.0.0"
+      }
+    },
+    "net45": {
+      "frameworkAssemblies": {
+        "System.Configuration": "4.0.0.0"
+      }
+    },
+    "net40": {
+      "buildOptions": {
+        "define": [ "net40" ]
+      },
+      "frameworkAssemblies": {
+        "System.Configuration": "4.0.0.0"
+      }
+    },
+    "net35": {
+      "buildOptions": {
+        "define": [ "net35" ]
+      },
+      "frameworkAssemblies": {
+        "System.Configuration": "2.0.0.0",
+        "System.Net": "3.5.0.0",
+        "System.Web": "2.0.0.0"
+      }
+    }
+  }
+}

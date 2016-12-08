@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>22972567</NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug 3.5|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,12 +87,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\app\SharpRaven\SharpRaven.csproj">
-      <Project>{CC80A2E1-AE39-44DE-8DA3-4EEF42F90FB1}</Project>
-      <Name>SharpRaven</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

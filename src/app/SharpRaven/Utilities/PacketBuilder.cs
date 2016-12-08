@@ -29,6 +29,7 @@
 #endregion
 
 using System;
+using System.Reflection;
 
 namespace SharpRaven.Utilities
 {
@@ -46,10 +47,16 @@ namespace SharpRaven.Utilities
         /// </summary>
         static PacketBuilder()
         {
-            var assemblyName = typeof(PacketBuilder).Assembly.GetName();
+#if net35 || net40
+            var assemblyName = typeof(PacketBuilder).GetType().Assembly.GetName();
+#else
+            var assemblyName = typeof(PacketBuilder).GetTypeInfo().Assembly.GetName();
+#endif
             var name = assemblyName.Name;
             var version = assemblyName.Version;
             userAgent = String.Format("{0}/{1}", name, version);
+            ProductName = name;
+            Version = version.ToString();
         }
 
 
@@ -64,6 +71,17 @@ namespace SharpRaven.Utilities
             get { return userAgent; }
         }
 
+        /// <summary>
+        /// Gets the product name to be used in the UserAgent header
+        /// </summary>
+        public static string ProductName
+        { get; private set; }
+
+        /// <summary>
+        /// Gets the version to be used in the UserAgent header
+        /// </summary>
+        public static string Version
+        { get; private set; }
 
         /// <summary>
         /// Creates the authentication header base on the provided <see cref="Dsn"/>.

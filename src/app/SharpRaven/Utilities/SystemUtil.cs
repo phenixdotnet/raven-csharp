@@ -50,6 +50,7 @@ namespace SharpRaven.Utilities
             return string.IsNullOrEmpty(arg) || string.IsNullOrEmpty(arg.Trim());
         }
 
+#if !NETSTANDARD
         /// <summary>
         /// Return all loaded modules.
         /// </summary>
@@ -60,9 +61,9 @@ namespace SharpRaven.Utilities
         {
             var assemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                #if (!net35)
+#if (!net35)
                 .Where(q => !q.IsDynamic)
-                #endif
+#endif
                 .Select(a => a.GetName())
                 .OrderBy(a => a.Name);
 
@@ -78,6 +79,7 @@ namespace SharpRaven.Utilities
 
             return dictionary;
         }
+#endif
 
         /// <summary>
         /// Writes the <paramref name="exception"/> to the <see cref="Console"/>.
@@ -135,6 +137,23 @@ namespace SharpRaven.Utilities
             {
                 output.Write(buffer, 0, bytesRead);
             }
+        }
+
+        /// <summary>
+        /// Gets the username from the environment variable
+        /// </summary>
+        /// <returns></returns>
+        public static string GetUserName()
+        {
+#if !NETSTANDARD
+            return Environment.UserName;
+#else
+            string username = Environment.GetEnvironmentVariable("Username"); // Handle the windows and mac os x username
+            if (string.IsNullOrEmpty(username))
+                username = Environment.GetEnvironmentVariable("User"); // Handle the *unix user name
+
+            return username;
+#endif
         }
     }
 }

@@ -116,10 +116,6 @@
       <Project>{abe22746-6eeb-4970-a608-c02bc3b8bda3}</Project>
       <Name>SharpRaven.Nancy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\app\SharpRaven\SharpRaven.csproj">
-      <Project>{cc80a2e1-ae39-44de-8da3-4eef42f90fb1}</Project>
-      <Name>SharpRaven</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

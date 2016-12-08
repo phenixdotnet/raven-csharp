@@ -92,12 +92,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpRaven\SharpRaven.csproj">
-      <Project>{cc80a2e1-ae39-44de-8da3-4eef42f90fb1}</Project>
-      <Name>SharpRaven</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="SharpRaven.Nancy.nuspec" />
   </ItemGroup>

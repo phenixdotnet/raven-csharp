@@ -302,6 +302,7 @@ namespace SharpRaven.Data
 
             checkedForHttpContextProperty = true;
 
+#if !NETSTANDARD
             try
             {
                 var systemWeb = AppDomain.CurrentDomain
@@ -329,6 +330,7 @@ namespace SharpRaven.Data
             {
                 SystemUtil.WriteError(exception);
             }
+#endif
         }
     }
 }

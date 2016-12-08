@@ -151,9 +151,10 @@ namespace SharpRaven.Data
         /// </summary>
         private JsonPacket()
         {
+#if !NETSTANDARD
             // Get assemblies.
             Modules = SystemUtil.GetModules();
-
+#endif
             // The current hostname
             ServerName = System.Environment.MachineName;
 
@@ -357,6 +358,7 @@ namespace SharpRaven.Data
         {
             Message = exception.Message;
 
+#if !NETSTANDARD
             if (exception.TargetSite != null)
             {
                 // ReSharper disable ConditionIsAlwaysTrueOrFalse => not for dynamic types.
@@ -367,6 +369,7 @@ namespace SharpRaven.Data
                                         exception.TargetSite.Name);
                 // ReSharper restore ConditionIsAlwaysTrueOrFalse
             }
+#endif
 
             Exceptions = new List<SentryException>();
 
