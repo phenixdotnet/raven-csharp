@@ -1,4 +1,5 @@
-﻿#region License
+﻿#if !NETSTANDARD
+#region License
 
 // Copyright (c) 2014 The Sentry Team and individual contributors.
 // All rights reserved.
@@ -211,3 +212,5 @@ namespace SharpRaven.UnitTests
         }
     }
 }
+
+#endif

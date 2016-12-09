@@ -41,6 +41,7 @@ using NSubstitute;
 
 namespace SharpRaven.UnitTests.Data
 {
+#if !NETSTANDARD
     internal class StackFrameWithNullMethod : StackFrame
     {
         public override MethodBase GetMethod()
@@ -48,11 +49,13 @@ namespace SharpRaven.UnitTests.Data
             return null;
         }
     }
+#endif
 
     [TestFixture]
     public class ExceptionFrameTests
     {
 
+#if !NETSTANDARD
         [Test]
         public void Constructor_NullFrameMethod_DoesNotThrow()
         {
@@ -67,7 +70,7 @@ namespace SharpRaven.UnitTests.Data
             Assert.AreEqual("(unknown)", frame.Function);
             Assert.AreEqual("(unknown)", frame.Source);
         }
-
+#endif
         [Test]
         public void Constructor_InAppFrames_Identified()
         {
@@ -97,7 +100,7 @@ namespace SharpRaven.UnitTests.Data
         [Test]
         public void Constructor_Preserves_Function_Names()
         {
-            var stackTrace = new StackTrace(TestHelper.GetException());
+            var stackTrace = new StackTrace(TestHelper.GetException(), false);
             var stackFrame = stackTrace.GetFrames().Last();
             var frame = new ExceptionFrame(stackFrame);
 

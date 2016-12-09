@@ -1,4 +1,5 @@
-﻿#region Disclaimer/Info
+﻿#if !NETSTANDARD
+#region Disclaimer/Info
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Subtext WebLog
@@ -281,3 +282,4 @@ namespace SharpRaven.UnitTests.Utilities
         }
     }
 }
+#endif

@@ -37,7 +37,7 @@ using SharpRaven.UnitTests.Utilities;
 
 namespace SharpRaven.UnitTests.Data
 {
-    internal class PrivateException : ApplicationException
+    internal class PrivateException : InvalidOperationException
     {
     }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD
+using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Security.Principal;
@@ -832,3 +833,4 @@ namespace SharpRaven.UnitTests.Utilities
         #endregion
     }
 }
+#endif
