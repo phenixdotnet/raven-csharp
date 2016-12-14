@@ -53,21 +53,28 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddOptions();
             services.Add(ServiceDescriptor.Singleton<IOptions<RavenOptions>>(new OptionsWrapper<RavenOptions>(options)));
 
-            services.TryAdd(ServiceDescriptor.Singleton<IRavenClient, RavenClient>((serviceProvider) =>
+            services.TryAdd(ServiceDescriptor.Singleton<IRavenClient>((serviceProvider) =>
             {
                 var config = serviceProvider.GetService<IOptions<RavenOptions>>();
                 var environment = serviceProvider.GetService<IHostingEnvironment>();
                 string release = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
 
-                return new RavenClient(config.Value.Dsn)
+                if (string.IsNullOrEmpty(config.Value.Dsn))
                 {
-                    Compression = config.Value.Compression,
-                    Environment = string.IsNullOrEmpty(environment.EnvironmentName) ? environment.EnvironmentName : config.Value.Environment,
-                    IgnoreBreadcrumbs = config.Value.IgnoreBreadcrumbs,
-                    Logger = config.Value.Logger,
-                    Timeout = config.Value.Timeout,
-                    Release = string.IsNullOrEmpty(config.Value.Release) ? release : config.Value.Release
-                };
+                    return new NoneRavenClient();
+                }
+                else
+                {
+                    return new RavenClient(config.Value.Dsn)
+                    {
+                        Compression = config.Value.Compression,
+                        Environment = string.IsNullOrEmpty(environment.EnvironmentName) ? environment.EnvironmentName : config.Value.Environment,
+                        IgnoreBreadcrumbs = config.Value.IgnoreBreadcrumbs,
+                        Logger = config.Value.Logger,
+                        Timeout = config.Value.Timeout,
+                        Release = string.IsNullOrEmpty(config.Value.Release) ? release : config.Value.Release
+                    };
+                }
             }));
 
             services.TryAdd(ServiceDescriptor.Singleton<RavenExceptionFilter>(serviceProvider =>

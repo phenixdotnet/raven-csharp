@@ -32,7 +32,7 @@ namespace AspNetCoreSample
 
             services.AddRavenClient(options =>
             {
-                options.Dsn = "http://e116a7e3cd3546cf89e92dd34ba9558b:f30a8dbf3a814c63afad6959efa54556@vdockerdev001:9000/3";
+                options.Dsn = "http://mydsn";
                 options.Compression = false;
             });
         }
