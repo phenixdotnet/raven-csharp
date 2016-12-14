@@ -53,7 +53,7 @@ namespace SharpRaven.Utilities
             // Encode into data byte-stream with UTF8.
             byte[] data = Encoding.UTF8.GetBytes(json);
 
-            using (GZipStream gzip = new GZipStream(stream, CompressionMode.Compress))
+            using (GZipStream gzip = new GZipStream(stream, CompressionMode.Compress, true))
             {
                 gzip.Write(data, 0, data.Length);
             }

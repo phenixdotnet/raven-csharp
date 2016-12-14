@@ -27,6 +27,7 @@ namespace AspNetCoreSample.Controllers
         [HttpPost]
         public void Post([FromBody]string value)
         {
+            throw new Exception("A really bad exception");
         }
 
         // PUT api/values/5

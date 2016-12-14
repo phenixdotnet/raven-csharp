@@ -2,16 +2,18 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "SharpRaven": {
-      "target": "project",
-      "version": "3.*"
-    },
+    "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0",
     "Microsoft.AspNetCore.Http": "1.1.0",
+    "Microsoft.AspNetCore.Mvc": "1.1.0",
+    "Microsoft.AspNetCore.Mvc.Abstractions": "1.1.0",
     "Microsoft.Extensions.Configuration": "1.1.0",
     "Microsoft.Extensions.Options": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
-    "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0",
-    "NETStandard.Library": "1.6.1"
+    "NETStandard.Library": "1.6.1",
+    "SharpRaven": {
+      "target": "project",
+      "version": "3.*"
+    }
   },
 
   "frameworks": {

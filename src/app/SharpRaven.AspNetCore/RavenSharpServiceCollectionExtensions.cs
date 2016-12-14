@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using SharpRaven;
 using SharpRaven.AspNetCore;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -20,26 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
         public static IServiceCollection AddRavenClient(this IServiceCollection services)
         {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
-            services.AddOptions();
-            services.TryAdd(ServiceDescriptor.Singleton<IRavenClient, RavenClient>((serviceProvider) =>
-            {
-                var config = serviceProvider.GetService<IOptions<RavenOptions>>();
-                var environment = serviceProvider.GetService<IHostingEnvironment>();
-                return new RavenClient(config.Value.Dsn)
-                {
-                    Compression = config.Value.Compression,
-                    Environment = environment.EnvironmentName,
-                    IgnoreBreadcrumbs = config.Value.IgnoreBreadcrumbs,
-                    Logger = config.Value.Logger,
-                    Timeout = config.Value.Timeout
-                };
-            }));
-
+            AddRavenClient(services, ravenOptions => { });
             return services;
         }
 
@@ -64,8 +46,39 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services));
             }
 
-            services.AddRavenClient();
-            services.Configure(setupAction);
+            RavenOptions options = new RavenOptions();
+
+            setupAction(options);
+
+            services.AddOptions();
+            services.Add(ServiceDescriptor.Singleton<IOptions<RavenOptions>>(new OptionsWrapper<RavenOptions>(options)));
+
+            services.TryAdd(ServiceDescriptor.Singleton<IRavenClient, RavenClient>((serviceProvider) =>
+            {
+                var config = serviceProvider.GetService<IOptions<RavenOptions>>();
+                var environment = serviceProvider.GetService<IHostingEnvironment>();
+                string release = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion;
+
+                return new RavenClient(config.Value.Dsn)
+                {
+                    Compression = config.Value.Compression,
+                    Environment = string.IsNullOrEmpty(environment.EnvironmentName) ? environment.EnvironmentName : config.Value.Environment,
+                    IgnoreBreadcrumbs = config.Value.IgnoreBreadcrumbs,
+                    Logger = config.Value.Logger,
+                    Timeout = config.Value.Timeout,
+                    Release = string.IsNullOrEmpty(config.Value.Release) ? release : config.Value.Release
+                };
+            }));
+
+            services.TryAdd(ServiceDescriptor.Singleton<RavenExceptionFilter>(serviceProvider =>
+            {
+                var ravenClient = serviceProvider.GetService<IRavenClient>();
+                return new RavenExceptionFilter(ravenClient);
+            }));
+            services.AddMvc(config =>
+            {
+                config.Filters.AddService(typeof(RavenExceptionFilter));
+            });
 
             return services;
         }

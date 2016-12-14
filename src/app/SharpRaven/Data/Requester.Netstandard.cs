@@ -101,20 +101,19 @@ namespace SharpRaven.Data
         public async Task<string> RequestAsync()
         {
             HttpContent httpContent = null;
+            MemoryStream memoryStream = null;
             if (this.ravenClient.Compression)
             {
-                using (MemoryStream ms = new MemoryStream())
+                memoryStream = new MemoryStream();
+                StreamContent streamContent = new StreamContent(memoryStream);
+                if (this.ravenClient.Compression)
                 {
-                    StreamContent streamContent = new StreamContent(ms);
-                    if (this.ravenClient.Compression)
-                    {
-                        streamContent.Headers.ContentEncoding.Add("gzip");
-                        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-                    }
-                    GzipUtil.Write(this.data.Scrubbed, ms);
-
-                    httpContent = streamContent;
+                    streamContent.Headers.ContentEncoding.Add("gzip");
+                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
                 }
+                GzipUtil.Write(this.data.Scrubbed, memoryStream);
+
+                httpContent = streamContent;
             }
             else
             {
@@ -128,6 +127,7 @@ namespace SharpRaven.Data
             using (var response = await this.httpClient.PostAsync(string.Empty, httpContent).ConfigureAwait(false))
             {
                 httpContent.Dispose();
+                memoryStream?.Dispose();
 
                 if (!response.IsSuccessStatusCode)
                 {

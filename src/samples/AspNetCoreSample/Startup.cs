@@ -28,10 +28,13 @@ namespace AspNetCoreSample
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-           
-
             services.AddMvc();
+
+            services.AddRavenClient(options =>
+            {
+                options.Dsn = "http://e116a7e3cd3546cf89e92dd34ba9558b:f30a8dbf3a814c63afad6959efa54556@vdockerdev001:9000/3";
+                options.Compression = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

@@ -8,7 +8,12 @@ namespace SharpRaven.AspNetCore
 {
     public class RavenOptions : IOptions<RavenOptions>
     {
-        
+        public RavenOptions()
+        {
+            this.Compression = false;
+            this.Timeout = new TimeSpan(0, 0, 5);
+        }
+
         /// <summary>
         /// Gets or sets the Dsn value
         /// </summary>
@@ -37,6 +42,18 @@ namespace SharpRaven.AspNetCore
         /// Gets or sets the timeout limit
         /// </summary>
         public TimeSpan Timeout
+        { get; set; }
+
+        /// <summary>
+        /// Gets or sets the release version or name
+        /// </summary>
+        public string Release
+        { get; set; }
+
+        /// <summary>
+        /// Gets or sets the environment name
+        /// </summary>
+        public string Environment
         { get; set; }
 
         /// <summary>
