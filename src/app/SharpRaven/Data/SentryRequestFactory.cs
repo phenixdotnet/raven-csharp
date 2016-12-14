@@ -110,8 +110,7 @@ namespace SharpRaven.Data
                 }
             }
         }
-
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="SentryRequest"/>
         /// for the current packet.

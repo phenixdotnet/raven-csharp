@@ -14,3 +14,10 @@ obj/
 /TestResult.xml
 docs/_build
 .vs
+/src/app/SharpRaven.AspNetCore/project.lock.json
+/src/artifacts
+/src/tools/Addins
+/src/tools/Cake
+/src/tools/GitVersion.CommandLine/tools
+/src/tools/OpenCover
+/src/samples/AspNetCoreSample/project.lock.json

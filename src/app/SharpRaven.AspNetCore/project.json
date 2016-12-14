@@ -1,0 +1,23 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "SharpRaven": {
+      "target": "project",
+      "version": "3.*"
+    },
+    "Microsoft.AspNetCore.Http": "1.1.0",
+    "Microsoft.Extensions.Configuration": "1.1.0",
+    "Microsoft.Extensions.Options": "1.1.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
+    "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0",
+    "NETStandard.Library": "1.6.1"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    },
+    "net46": {}
+  }
+}
