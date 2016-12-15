@@ -17,5 +17,5 @@ install:
   # Restore dependencies
   - dotnet restore
 script:
-  - cd ./src
-  - ./build.sh
+  - chmod u+x ./src/build.sh
+  - ./src/build.sh
