@@ -1,7 +1,20 @@
 language: csharp
-solution: src/SharpRaven.sln
+mono: none
+dotnet: 1.0.0-preview2-1-003177
 sudo: false
 install:
-  - make
+  # Display dotnet version info
+  - which dotnet;
+    if [ $? -eq 0 ]; then
+      echo "Using dotnet:";
+      dotnet --info;
+    else
+      echo "dotnet.exe not found"
+      exit 1;
+    fi
+
+  # Restore dependencies
+  - dotnet restore
 script:
-  - make test
+  - cd ./src
+  - ./build.sh
