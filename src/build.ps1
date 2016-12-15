@@ -60,6 +60,7 @@ $PACKAGES_CONFIG = Join-Path $TOOLS_DIR "packages.config"
 
 $CAKE_EXE = Join-Path $TOOLS_DIR "Cake/Cake.exe"
 
+$Script = Join-Path $PSScriptRoot $Script
 
 # Should we use mono?
 $UseMono = "";
