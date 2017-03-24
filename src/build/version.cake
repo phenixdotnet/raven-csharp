@@ -15,7 +15,7 @@ public class BuildVersion
         string semVersion = null;
         string fullSemVersion = null;
 
-		string version = ReadVersionInProjectJsonFile(context, parameters.FileForVersion);
+		string version = ReadVersionInCSProjectFile(context, parameters.FileForVersion);
 
 		var branchName = System.Environment.GetEnvironmentVariable("BUILD_SOURCEBRANCHNAME");
 		if(string.IsNullOrEmpty(branchName))
@@ -31,7 +31,7 @@ public class BuildVersion
 		}
 		else
 		{
-			var latestTag = RunGitCommand(context, "describe --abbrev=0 --tags");
+			var latestTag = RunGitCommand(context, "describe --always --abbrev=0 --tags");
 			latestTag = latestTag.Trim();
 
 			var countCommitSinceLastTag = RunGitCommand(context, "rev-list --count " + latestTag + "..HEAD");
@@ -51,15 +51,21 @@ public class BuildVersion
         };
     }
 
-	private static string ReadVersionInProjectJsonFile(ICakeContext context, string file)
+	private static string ReadVersionInCSProjectFile(ICakeContext context, string file)
 	{
-		context.Information("Using json file " + file + " as version source");
+		file = System.IO.Path.GetFullPath(file);
+		context.Information("Using csproj file " + file + " as version source");
 
-		var json = context.DeserializeJsonFromFile<InternalVersion>(file);
-		var version = json.Version;
+		System.Xml.XmlDocument document = new System.Xml.XmlDocument();
+        document.Load(file);
+
+        string version = ((System.Xml.XmlElement)document.DocumentElement.GetElementsByTagName("PropertyGroup").Item(0)).GetElementsByTagName("VersionPrefix").Item(0).InnerText;
+		//string version = context.XmlPeek(file, "/Project/PropertyGroup/VersionPrefix");
+		if(string.IsNullOrEmpty(version))
+		{
+			throw new Exception("Unable to read version from file " + file + ". XML node /Project/PropertyGroup/VersionPrefix missing or empty");
+		}
 		
-		version = version.Replace("-*", string.Empty);
-
 		return version;
 	}
 

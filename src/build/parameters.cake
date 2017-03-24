@@ -7,9 +7,14 @@ public class BuildParameters
     public bool IsLocalBuild { get; private set; }
     public bool IsRunningOnUnix { get; private set; }
     public bool IsRunningOnWindows { get; private set; }
+    public bool IsPullRequest { get; private set; }
+    public bool IsTagged { get; private set; }
+    public bool IsPublishBuild { get; private set; }
+    public bool IsReleaseBuild { get; private set; }
     public bool SkipGitVersion { get; private set; }
     public BuildVersion Version { get; private set; }
 	public string FileForVersion { get; private set; }
+    public string DockerHostConnection { get; private set; }
 
     public void SetBuildVersion(BuildVersion version)
     {
@@ -37,7 +42,9 @@ public class BuildParameters
             sortedDirectories.Sort();
             var directory = sortedDirectories[0];
 			
-			fileForVersion = System.IO.Path.Combine(".", directory, "project.json");
+			fileForVersion = System.IO.Directory.GetFiles(directory, "*.csproj").First();
+			
+			//fileForVersion = System.IO.Path.Combine(".", directory, "*.csproj");
 		}
 
         return new BuildParameters {
@@ -47,7 +54,21 @@ public class BuildParameters
             IsLocalBuild = buildSystem.IsLocalBuild,
             IsRunningOnUnix = context.IsRunningOnUnix(),
             IsRunningOnWindows = context.IsRunningOnWindows(),
-            SkipGitVersion = StringComparer.OrdinalIgnoreCase.Equals("True", context.EnvironmentVariable("CAKE_SKIP_GITVERSION"))
+            IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest,
+            IsPublishBuild = new [] {
+                "ReleaseNotes",
+                "Create-Release-Notes"
+            }.Any(
+                releaseTarget => StringComparer.OrdinalIgnoreCase.Equals(releaseTarget, target)
+            ),
+            IsReleaseBuild = new [] {
+                "Publish",
+                "Publish-NuGet"
+            }.Any(
+                publishTarget => StringComparer.OrdinalIgnoreCase.Equals(publishTarget, target)
+            ),
+            SkipGitVersion = StringComparer.OrdinalIgnoreCase.Equals("True", context.EnvironmentVariable("CAKE_SKIP_GITVERSION")),
+            DockerHostConnection = context.Argument("dockerHost", string.Empty)
         };
     }
 }

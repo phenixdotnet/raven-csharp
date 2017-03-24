@@ -39,7 +39,6 @@ Param(
     [switch]$WhatIf,
     [switch]$Mono,
     [switch]$SkipToolPackageRestore,
-	[string]$DotnetVersion,
 	[Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$ScriptArgs
 )
@@ -57,10 +56,11 @@ $TOOLS_DIR = Join-Path $PSScriptRoot "tools"
 $NUGET_EXE = Join-Path $TOOLS_DIR "nuget.exe"
 $NUGET_SOURCE = "https://api.nuget.org/v3/index.json"
 $PACKAGES_CONFIG = Join-Path $TOOLS_DIR "packages.config"
+$NUGET_URL = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
+
 
 $CAKE_EXE = Join-Path $TOOLS_DIR "Cake/Cake.exe"
 
-$Script = Join-Path $PSScriptRoot $Script
 
 # Should we use mono?
 $UseMono = "";
@@ -89,12 +89,15 @@ if ((Test-Path $PSScriptRoot) -and !(Test-Path $TOOLS_DIR)) {
 }
 
 if(-Not $WhatIf.IsPresent) {
-	Write-Host "Downloading and restoring the dotnet sdk"
-	$dotnetArchiveFile = Join-Path $TOOLS_DIR "dotnetsdk.zip"
-	# Invoke-WebRequest $DOTNET_DOWNLOAD_URL -OutFile $dotnetArchiveFile
-	
-	# Add-Type -assembly “system.io.compression.filesystem”
-	# [io.compression.zipfile]::ExtractToDirectory($dotnetArchiveFile, $TOOLS_DIR)
+	# Try download NuGet.exe if do not exist.
+	if (!(Test-Path $NUGET_EXE)) {
+		(New-Object System.Net.WebClient).DownloadFile($NUGET_URL, $NUGET_EXE)
+	}
+
+	# Make sure NuGet exists where we expect it.
+	if (!(Test-Path $NUGET_EXE)) {
+		Throw "Could not find NuGet.exe"
+	}
 }
 
 # Save nuget.exe path to environment to be available to child processed
@@ -109,12 +112,5 @@ if (!(Test-Path $CAKE_EXE)) {
 
 # Start Cake
 Write-Host "Running build script..."
-if($IsBuildServer)
-{
-	Invoke-Expression "$CAKE_EXE `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental -dotnetVersion=`"$dotnetVersion`" $ScriptArgs" 2>&1 3>&1
-}
-else
-{
-	Invoke-Expression "$CAKE_EXE `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental -dotnetVersion=`"$dotnetVersion`" $ScriptArgs"
-}
+Invoke-Expression "$CAKE_EXE `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental -FileForVersion=`"$FileForVersion`" -DockerHost=`"$DockerHost`" $ScriptArgs"
 exit $LASTEXITCODE
