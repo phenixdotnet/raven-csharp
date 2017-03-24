@@ -34,10 +34,10 @@ using NUnit.Framework;
 
 using SharpRaven.UnitTests.Utilities;
 
-namespace SharpRaven.UnitTests.RavenClientTests
+namespace SharpRaven.UnitTests
 {
     [TestFixture]
-    public class RavenClientTests
+    public partial class RavenClientTests
     {
         [Test]
         public void Constructor_NullDsn_ThrowsArgumentNullException()
